@@ -1,0 +1,5 @@
+# Baselines for the benchmarks (so3kit itself: pip install -e ..)
+e3nn
+s2fft
+jax[cuda12]
+matplotlib

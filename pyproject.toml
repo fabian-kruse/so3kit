@@ -1,0 +1,39 @@
+[project]
+name = "so3kit"
+version = "0.1.0"
+description = "Fast harmonic analysis on SO(3) in PyTorch: Wigner-D matrices, SO(3) FFT, analytic gradients and Hessians on the GPU."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { file = "LICENSE" }
+authors = [{ name = "Fabian Kruse" }]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Mathematics",
+]
+dependencies = [
+  "torch",
+  "numpy<2.5",               # numba-cuda still calls np.row_stack, removed in NumPy 2.5
+  "numba-cuda[cu12]",
+  "cuda-core[cu12]<1.3",     # 1.3 needs cuda-bindings >= 12.9.8, but torch pins an older one
+  "spherical",
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.urls]
+Repository = "https://github.com/fabian-kruse/so3kit"
+Paper = "https://arxiv.org/abs/2603.15285"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+markers = ["gpu: needs a CUDA GPU"]
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
