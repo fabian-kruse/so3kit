@@ -29,9 +29,9 @@ PANELS = [
          series=[("so3kit", "so3kit", "so3kit", "o", "-"),
                  ("J-matrix", "J-matrix", "J-matrix", "s", "-"),
                  ("e3nn", "e3nn", "e3nn", "^", "-")]),
-    dict(file="sofft.csv", x="L", y="seconds_per_function", where={"batch": "1"},
+    dict(file="sofft.csv", x="L", y="seconds_per_function", invert=True, where={"batch": "1"},
          title="Inverse SO(3) FFT (1 function)", xlabel="bandlimit L",
-         ylabel="seconds per function (lower is better)",
+         ylabel="functions / s (higher is better)",
          series=[("so3kit", "so3kit", "so3kit", "o", "-"),
                  ("s2fft precomputed kernel [real]", "s2fft precomputed", "s2fft", "D", "-"),
                  ("s2fft recursive [real]", "s2fft recursive", "s2fft", "P", "--")]),
@@ -64,7 +64,8 @@ def panel(ax, spec):
     ax.set_title(spec["title"], loc="left", fontsize=10, color=INK)
     xticks = sorted({float(r[spec["x"]]) for r in rows})
     for backend, label, lib, marker, ls in spec["series"]:
-        pts = sorted((float(r[spec["x"]]), float(r[spec["y"]])) for r in rows if key(r) == backend)
+        f = (lambda v: 1.0 / v) if spec.get("invert") else (lambda v: v)
+        pts = sorted((float(r[spec["x"]]), f(float(r[spec["y"]]))) for r in rows if key(r) == backend)
         if not pts:
             continue
         xs, ys = zip(*pts)
